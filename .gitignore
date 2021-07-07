@@ -1,0 +1,10 @@
+**/.vagrant/
+**.vdi
+**/.cache/
+**/.python_history
+**/.bash_history
+**/.sudo_as_admin_successful
+**/__pycache__
+**/node_modules
+**/ubuntu-bionic-18.04-cloudimg-console.log
+**/keys/
