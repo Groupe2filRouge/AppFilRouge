@@ -46,3 +46,6 @@ class ConverterService():
                     self.convert2Html(repertoire, f, currentFolder, destinationFolder)
             
         return "Done"
+        
+    def fonction_a_tester(self, param1, param2):
+        return param1 + param2
