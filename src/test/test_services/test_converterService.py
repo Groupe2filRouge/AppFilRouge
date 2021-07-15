@@ -1,4 +1,5 @@
 import unittest
+import xmlrunner
 import main
 from main.services.converterService import ConverterService
 
@@ -14,4 +15,8 @@ class TestConverterService(unittest.TestCase):
         self.assertEqual(self.converterSrv.fonction_a_tester(1,1), 2)
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(
+        testRunner=xmlrunner.XMLTestRunner(output='test-reports'),
+        failfast=False,
+        buffer=False,
+        catchbreak=False)
