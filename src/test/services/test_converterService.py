@@ -1,4 +1,5 @@
 import unittest
+import main
 from main.services.ConverterService import ConverterService
 
 class TestConverterService(unittest.TestCase):
