@@ -7,16 +7,12 @@ RUN apk update \
  && apk add git
 
 # Copie du depot
-RUN git clone https://github.com/Groupe2filRouge/ProjetFilRouge.git && cd ProjetFilRouge &&  git checkout  poc
+RUN git clone https://github.com/Groupe2filRouge/AppFilRouge.git
 
 # Copie du fichier main.py
 
-Run cp  ./ProjetFilRouge/poc/shared/app.py ./app.py
-# RUN cp  ProjetFilRouge/poc/shared/requirements.txt .
-Run cp  ./ProjetFilRouge/poc/shared/requirements.txt ./requirements.txt
-
-# Suppression des dossiers inutiles
-#RUN rm -r example-python/
+Run cp -r ./AppFilRouge/src/main .
+Run cp  ./AppFilRouge/src/requirements.txt ./requirements.txt
 
 # Copie du fichier des dependances
 COPY requirements.txt .
@@ -28,6 +24,6 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Suppression des fichiers inutiles
-RUN rm requirements.txt Dockerfile
+RUN rm requirements.txt
 
 CMD ["python3", "app.py"]
