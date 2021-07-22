@@ -1,6 +1,5 @@
 import pymongo
 from bson.json_util import dumps, loads
-import random
 import json
 
 # The service for database's operations
