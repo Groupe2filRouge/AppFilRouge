@@ -1,19 +1,22 @@
+# Image choisie
 FROM python:3.9.6-alpine3.13
 
+# Repertoire de travail
 WORKDIR /app
 
-# Update et recupere git
+# Update le container et recupere git
 RUN apk update \
  && apk add git
 
 # Copie du depot
 RUN git clone https://github.com/Groupe2filRouge/AppFilRouge.git
 
-# Copie du fichier main.py
+# Copie des fichiers sources
+RUN cp -r ./AppFilRouge/src/main/* .
+RUN cp  ./AppFilRouge/src/requirements.txt ./requirements.txt
 
-Run cp -r ./AppFilRouge/src/main/* .
-Run cp  ./AppFilRouge/src/requirements.txt ./requirements.txt
-Run rm -r AppFilRouge
+# Suppression des fichiers devenus inutiles
+RUN rm -r AppFilRouge
 
 # Installation des dependances
 RUN pip install -r requirements.txt
@@ -21,6 +24,8 @@ RUN pip install -r requirements.txt
 # Copie du docker intermediaire vers le courant
 COPY . .
 
+# Definition du path pour python
 ENV PYTHONPATH "${PYTHONPATH}:/app"
 
+# Commande au run du container
 CMD ["python3", "app.py"]
