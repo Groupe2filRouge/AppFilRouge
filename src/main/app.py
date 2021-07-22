@@ -18,6 +18,12 @@ gitSrv = GitService()
 # Create app Flask
 app = Flask(__name__)
 
+# Annotation that allows the function to be hit at the specific URL.
+@app.route("/")
+# Generic Python functino that returns "Hello world!"
+def index():
+    return "Hello world DevOps!"
+
 # The webhook adress for a git account
 @app.route("/github-webhook/", methods=["POST"])
 def webhook():
@@ -47,4 +53,4 @@ def testSlack():
 # Checks to see if the name of the package is the run as the main package.
 if __name__ == "__main__":
     # Runs the Flask application only if the main.py file is being run.
-    app.run(host= '0.0.0.0', port=8080)
+    app.run(host= '0.0.0.0')
