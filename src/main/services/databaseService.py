@@ -11,12 +11,12 @@ class DatabaseService():
     def __init__(self):
         print("init DatabaseService")
         pymongoClient = pymongo.MongoClient("mongodb://localhost:27017/")
-        base_de_donnees = pymongoClient["projetFR"]
-        self.redacteurs = base_de_donnees["redacteurs"]
+        base_de_donnees = pymongoClient["projet"]
+        self.redacteurs = base_de_donnees["liens"]
            
     # Getter for redactor data
     def get_redacteur_data(self, git, branch_ref):
         branch_name = branch_ref.split("/")[-1]
-        redacteur = list(self.redacteurs.find({ "gitAdress": git }, {"gitBranchName": branch_name}))
-        #import pdb;pdb.set_trace()
+        query = { "gitAdress": git, "gitBranchName": branch_name}
+        redacteur = list(self.redacteurs.find(query))
         return redacteur
