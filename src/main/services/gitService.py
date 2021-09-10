@@ -9,9 +9,9 @@ class GitService():
         print('init GitService')
 
     # Clone repository from a given adress
-    def clone(self, adress, branch, isBranch):
+    def clone(self, adress, branch, isBranch, projectName):
         #Tests pour le changement de branche afin de créer des arborescences à convertir sans polluer la master:
-        os.system('git'+' clone '+str(adress)+' /tmp/clone')  #clone le git
+        os.system('git'+' clone '+str(adress)+' /tmp/clone/'+projectName)  #clone le git
         #if(isBranch)            
         #    os.chdir(r'~/tmp/clone') #change de dossier pour le checkout
         #    os.system('git'+' checkout '+ branch) #se met dans la branche

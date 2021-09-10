@@ -13,8 +13,8 @@ class ConverterService():
     def __init__(self):
         print("init ConverterService")
 
-    def convert(self):
-        return self.browse("/tmp/clone")
+    def convert(self, projectName):
+        return self.browse("/tmp/clone/"+projectName, projectName)
 
     # Convert local .md file to .html file 
     def convert2Html(self, folder, fileName, currentFolder, destinationFolder):
@@ -71,13 +71,12 @@ class ConverterService():
         fichier.close()
         #print(arbo_html)
 
-    def browse(self, folder):
+    def browse(self, folder, projectName):
             #si le dossier de destination n'existe pas :
-        if(not os.path.exists("/tmp/converter")):
-            os.makedirs("/tmp/converter")
-        
-        destinationFolder="/tmp/converter"
-        
+        destinationFolder = "/tmp/converter/" + projectName
+        if(not os.path.exists(destinationFolder)):
+            os.makedirs(destinationFolder)
+                
         for (repertoire, sousRepertoires, fichiers) in walk(folder):
             #ignore les dossiers cachés
             if(repertoire.find('.')==0):
