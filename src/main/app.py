@@ -27,16 +27,15 @@ def index():
 # The webhook adress for a git account
 @app.route("/github-webhook/", methods=["POST"])
 def webhook():
-    # TODO - check for others git account (not only github)
-    data = json.loads(request.data)
-    print ("full_name: {}".format(data['repository']['full_name']))
-    print ("html_url: {}.git".format(data['repository']['html_url']))
-    print ("New commit by: {}".format(data['commits'][0]['author']['name']))
-
-    # gitSrv.clone("{}.git".format(data['repository']['html_url']))
-    # converterSrv.convert()
-    # cloudSrv.push("")
-    return "Webhook intercepted and processed"
+    popup_text = "Un rédacteur vient de pousser du contenu sur GitHub"    
+    data = json.loads(request.data)   
+    redacteur = databaseSrv.get_redacteur_data("{}{}".format(data['repository']['clone_url'], data['repository']['ref']))  
+    blocks = messagingSrv.format_slack_message(data, redacteur)    
+    #import pdb;pdb.set_trace()   
+    messagingSrv.post_message_to_slack(redacteur['slackToken'].strip('"'), redacteur['slackChannel'].strip('"'), popup_text, blocks);
+    gitSrv.clone(data['repository']['clone_url'])
+    converterSrv.convert()   
+    
 
 @app.route("/enzo", methods=["GET"])
 def enzo():
