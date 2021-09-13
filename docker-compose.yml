@@ -34,4 +34,6 @@ services:
         restart: always 
         environment:
             BASE_URL: 192.168.1.118
-            
+           
+volumes:
+    - ~/data/db           
