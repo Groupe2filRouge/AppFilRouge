@@ -16,7 +16,7 @@ RUN git clone https://github.com/Groupe2filRouge/AppFilRouge.git
 
 # Copie des fichiers sources
 RUN cp AppFilRouge/src/main/app.py .
-RUN cp -r AppFilRouge/src/main/service .
+RUN cp -r AppFilRouge/src/main/services .
 RUN cp AppFilRouge/src/requirements.txt .
 
 # Suppression des dossiers inutiles
