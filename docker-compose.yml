@@ -1,0 +1,37 @@
+version: '3.9'
+
+services: 
+
+    mongo:
+        image: mongo
+        restart: always
+        ports: 
+            - 27001:27001
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: secret
+        volumes:
+            - ~/data/db:/data/db
+
+    back:
+        depends_on: 
+            - mongo
+        build: 
+            dockerfile: Dockerfile-flask
+            context: .
+        ports: 
+            - 5000:5000
+        restart: always
+        
+    front:
+        depends_on: 
+            - back
+        build: 
+            dockerfile: Dockerfile-node
+            context: .
+        ports: 
+            - 4200:4200
+        restart: always 
+        environment:
+            BASE_URL: 192.168.1.118
+            

@@ -7,6 +7,9 @@ WORKDIR /app
 # Update le container et recupere git
 RUN apk update \
  && apk add git
+ 
+# Optimisation
+RUN apk add --no-cache gcc musl-dev linux-headers
 
 # Copie du depot
 RUN git clone https://github.com/Groupe2filRouge/AppFilRouge.git
