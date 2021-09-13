@@ -18,36 +18,19 @@ gitSrv = GitService()
 # Create app Flask
 app = Flask(__name__)
 
-# Annotation that allows the function to be hit at the specific URL.
-@app.route("/")
-# Generic Python functino that returns "Hello world!"
-def index():
-    return "Hello world DevOps!"
-
 # The webhook adress for a git account
 @app.route("/github-webhook/", methods=["POST"])
 def webhook():
     popup_text = "Un rédacteur vient de pousser du contenu sur GitHub"    
     data = json.loads(request.data)   
-    redacteur = databaseSrv.get_redacteur_data("{}{}".format(data['repository']['clone_url'], data['repository']['ref']))  
-    blocks = messagingSrv.format_slack_message(data, redacteur)    
-    #import pdb;pdb.set_trace()   
-    messagingSrv.post_message_to_slack(redacteur['slackToken'].strip('"'), redacteur['slackChannel'].strip('"'), popup_text, blocks);
-    gitSrv.clone(data['repository']['clone_url'])
-    converterSrv.convert()   
-    
-
-@app.route("/enzo", methods=["GET"])
-def enzo():
-    # TODO - remove tmp file after method
-    # gitSrv.clone("https://github.com/Groupe2filRouge/ProjetFilRouge.git")
-    converterSrv.convert()
+    redacteur = databaseSrv.get_redacteur_data(data['repository']['clone_url'], data['ref'])[0]
+    # TODO - cas non trouve
+    blocks = messagingSrv.format_slack_message(data['commits'][0]['author']['name'], redacteur)    
+    gitSrv.clone(redacteur['gitAdress'], redacteur['gitBranchName'], redacteur['gitBranch'], redacteur['gitProjectName'])
+    converterSrv.convert(redacteur['gitProjectName'])  
+    cloudSrv.push(redacteur['s3Name'], redacteur['gitProjectName']) 
+    messagingSrv.post_message_to_slack(redacteur['slackToken'].strip('"'), redacteur['slackChannel'].strip('"'), popup_text, blocks)
     return "Done"
-
-# The test adress for slack
-@app.route("/testSlack", methods=["GET"])
-def testSlack():
-    return messagingSrv.testSlack();	
 
 # Checks to see if the name of the package is the run as the main package.
 if __name__ == "__main__":

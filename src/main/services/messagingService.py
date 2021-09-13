@@ -2,11 +2,11 @@ import requests
 import json
 
 #For credentials
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 import os
 
 # Load .env file
-load_dotenv('../.env')
+#load_dotenv('../.env')
 
 # The service for messaging operations
 class MessagingService():
@@ -16,21 +16,22 @@ class MessagingService():
         print("init MessagingService")
 
     # Format slack message
-    def format_slack_message(self, git_data, redacteur_data):
+    def format_slack_message(self, author, redacteur_data):
+        print(redacteur_data)
         blocks = [
             {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
                 "text": "Le rédacteur {} vient de pousser un fichier Markdown\
-                 sur le repository Git suivant.".format(git_data['commits'][0]['author']['name'])
+                 sur le repository Git suivant.".format(author)
             }
             },             
             {  
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "{}".format(redacteur_data['gitAdress'])
+                "text": redacteur_data['gitAdress']
             }
             },
             {  
@@ -38,7 +39,7 @@ class MessagingService():
             "text": {
                 "type": "mrkdwn",
                 "text": "Le(s) fichiers converti(s) en HTML sont disponible(s)\
-                 sur Amazon cloud sur l'espace de stockage {}".format(redacteur_data['s3Name'])
+                 sur Amazon cloud sur l'espace de stockage {}/{}".format(redacteur_data['s3Adress'], redacteur_data['s3Name'])
             }
             }
         ]
