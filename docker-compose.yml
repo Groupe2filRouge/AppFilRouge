@@ -6,7 +6,7 @@ services:
         image: mongo
         restart: always
         ports: 
-            - 27001:27001
+            - 27081:27001
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: secret
@@ -20,7 +20,7 @@ services:
             dockerfile: Dockerfile
             context: .
         ports: 
-            - 5000:5000
+            - 5080:5000
         restart: always
         
 volumes:
