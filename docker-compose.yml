@@ -11,7 +11,7 @@ services:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: secret
         volumes:
-            - ~/data/db:/data/db
+            - mongodb:/data/db
 
     back:
         depends_on: 
@@ -36,4 +36,4 @@ services:
             BASE_URL: 192.168.1.118
            
 volumes:
-    - ~/data/db           
+    mongodb:           
