@@ -10,7 +10,10 @@ class DatabaseService():
     # Constructor
     def __init__(self):
         print("init DatabaseService")
-        pymongoClient = pymongo.MongoClient("mongodb://localhost:27017/")
+        # local
+        # pymongoClient = pymongo.MongoClient("mongodb://localhost:27017/")
+        # Docker
+        myclient = pymongo.MongoClient("mongodb://root:secret@mongo")
         base_de_donnees = pymongoClient["projet"]
         self.redacteurs = base_de_donnees["liens"]
            
