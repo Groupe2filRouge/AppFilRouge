@@ -99,5 +99,8 @@ class ConverterService():
                     self.ajoutArbre(destinationFolder, currentFolder, f, repertoire)
 
         return "Done"
+    
+def fonction_a_tester(self, param1, param2):
+    return param1 + param2
 
 
