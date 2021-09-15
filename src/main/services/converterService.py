@@ -100,7 +100,7 @@ class ConverterService():
 
         return "Done"
     
-def fonction_a_tester(self, param1, param2):
-    return param1 + param2
+    def fonction_a_tester(self, param1, param2):
+        return param1 + param2
 
 
