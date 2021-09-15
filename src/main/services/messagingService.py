@@ -1,5 +1,6 @@
 import requests
 import json
+from datetime import datetime
 
 #For credentials
 #from dotenv import load_dotenv
@@ -44,7 +45,7 @@ class MessagingService():
             }
         ]
         return blocks
-        
+
 
     # Post a given block message
     def post_message_to_slack(self, token, canal, text, blocks):
@@ -55,4 +56,27 @@ class MessagingService():
             'icon_emoji': ':see_no_evil:',
             'username': "botfilrouge",
             'blocks': json.dumps(blocks) if blocks else None
+        }).json()	
+
+    def post_message(self, token, canal, text, text_block, title, text_attachement):
+        return requests.post('https://slack.com/api/chat.postMessage', {
+            'token': token,
+            'channel': canal,
+            'username': "botfilrouge",
+            'attachments': json.dumps( 
+                [
+                    {
+                        "fallback": "Required plain-text summary of the attachment.",
+                        "color": "#36a64f",
+                        "pretext": text_block,
+                        "title": title,
+                        "title_link": text_attachement,
+                        "image_url": "http://my-website.com/path/to/image.jpg",
+                        "thumb_url": "http://example.com/path/to/thumb.png",
+                        "footer": "Converter API",
+                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+                        "ts": datetime.timestamp(datetime.now())
+                    }
+                ]
+            )
         }).json()	
