@@ -33,7 +33,7 @@ def webhook():
     messagingSrv.post_message(redacteur['slackToken'].strip('"'), redacteur['slackChannel'].strip('"'), popup_text, text_block, redacteur['gitProjectName'], redacteur['gitAdress'])
     gitSrv.clone(redacteur['gitAdress'], redacteur['gitBranchName'], redacteur['gitBranch'], redacteur['gitProjectName'])
     converterSrv.convert(redacteur['gitProjectName'])  
-    cloudSrv.push(redacteur['s3Name'], redacteur['gitProjectName']) 
+    cloudSrv.push(redacteur['s3Name'], redacteur['gitProjectName'], redacteur['s3Login'], redacteur['s3Password']) 
     # blocks = messagingSrv.format_s3_slack_message(data['commits'][0]['author']['name'], redacteur)        
     # messagingSrv.post_message_to_slack(redacteur['slackToken'].strip('"'), redacteur['slackChannel'].strip('"'), popup_text, blocks)
     text_block = "Les fichiers convertis sont disponibles sur l'espace de stockage."
