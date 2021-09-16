@@ -23,3 +23,6 @@ class DatabaseService():
         query = { "gitAdress": git, "gitBranchName": branch_name}
         redacteur = list(self.redacteurs.find(query))
         return redacteur
+    
+    def get_nb_redacteur_data(self):
+        return self.redacteurs.find().count()
