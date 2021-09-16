@@ -24,6 +24,7 @@ def webhook():
     popup_text = "Un rédacteur vient de pousser du contenu sur GitHub"    
     data = json.loads(request.data)   
     redacteur = databaseSrv.get_redacteur_data(data['repository']['clone_url'], data['ref'])[0]
+    print(redacteur)
     # TODO - cas non trouve
     author = data['commits'][0]['author']['name']
     # blocks = messagingSrv.format_git_slack_message(data['commits'][0]['author']['name'], redacteur)        
