@@ -42,7 +42,7 @@ def webhook():
 
 @app.route("/", methods=["GET"])
 def home():
-    return "AppFilRouge " + databaseSrv.get_nb_redacteur_data()
+    return "AppFilRouge " + str(databaseSrv.get_nb_redacteur_data())
 
 # Checks to see if the name of the package is the run as the main package.
 if __name__ == "__main__":
