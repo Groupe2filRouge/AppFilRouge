@@ -40,7 +40,7 @@ class MessagingService():
             "text": {
                 "type": "mrkdwn",
                 "text": "Le(s) fichiers converti(s) en HTML sont disponible(s)\
-                 sur Amazon cloud sur l'espace de stockage {}{}".format(redacteur_data['s3Adress'], redacteur_data['s3Name'])
+                 sur Amazon cloud sur l'espace de stockage {}/{}".format(redacteur_data['s3Adress'], redacteur_data['s3Name'])
             }
             }
         ]
