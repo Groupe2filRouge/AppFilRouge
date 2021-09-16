@@ -16,7 +16,12 @@ class CloudService():
 
     # Push from local file to cloud storage
     #def push(self, bucket): #argument bucket sera utile quand on aura la BDD
-    def push(self, bucket_name, projectName):
+    def push(self, bucket_name, projectName, key, secret):
+        self.s3_client = boto3.client(
+            's3',
+            aws_access_key_id=key,
+            aws_secret_access_key=secret
+        )
         destination=""
         path="/tmp/converter/"+projectName     
 
