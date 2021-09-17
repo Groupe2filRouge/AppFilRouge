@@ -1,0 +1,143 @@
+pipeline {
+    agent any
+    options {
+         // This is required if you want to clean before build
+        skipDefaultCheckout(true)
+    }
+    environment {
+        imagename = "filrouge/jenkins"
+        registryCredential = 'dockerhub'
+    }
+    stages {    
+        
+        stage('Checkout code') {
+            steps {
+				echo "[Projet ${env.JOB_NAME}] - Lancement du build: ${env.BUILD_DISPLAY_NAME} par ${env.NODE_NAME}"
+                slackSend channel: 'C027BKQ8LSC', color: "#439FE0", message: "[Projet ${env.JOB_NAME}] - Lancement du build: ${env.BUILD_DISPLAY_NAME}"
+                
+                // Clean before all
+                cleanWs()
+                
+                // Checkout code
+                git url:'https://github.com/Groupe2filRouge/AppFilRouge', branch: "main"
+            }
+        }
+		
+		stage('Init') {
+            steps {								
+                script {
+                    env.GIT_COMMIT_MSG = sh (script: 'git log -1 --pretty=%s ${GIT_COMMIT}', returnStdout: true).trim()
+                    env.GIT_COMMIT_NB = sh (script: 'git log -1 --pretty=%h ${GIT_COMMIT}', returnStdout: true).trim()
+                    env.GIT_AUTHOR = sh (script: 'git log -1 --pretty=%an ${GIT_COMMIT}', returnStdout: true).trim()
+                    env.GIT_AUTHOR_MAIL = sh (script: 'git log -1 --pretty=%ae ${GIT_COMMIT}', returnStdout: true).trim()
+                }
+                
+                echo "[Projet ${env.JOB_NAME}] - Git commit #${env.GIT_COMMIT_NB} \"${env.GIT_COMMIT_MSG}\" @author: ${env.GIT_AUTHOR_MAIL} (${env.GIT_AUTHOR})"
+                slackSend channel: 'C027BKQ8LSC', color: "#439FE0", message: "Dernier commit: https://github.com/apalpant/gradle-jenkins/commit/${env.GIT_COMMIT_NB} \nMessage: \"${env.GIT_COMMIT_MSG}\" par: ${env.GIT_AUTHOR_MAIL} (${env.GIT_AUTHOR})"
+            }
+        }
+       
+        stage('Install dependencies') {
+            steps {
+                // Run virtual environment
+                sh 'python3 -m venv venv'
+                sh '. venv/bin/activate'
+
+                // Install tests dependencies
+                sh 'python3 -m pip install pytest pytest-cov pycodestyle pylint markdown xmlrunner'
+
+                // Install tests dependencies
+                sh 'python3 -m pip install -r src/requirements.txt'
+            }   
+        }
+
+        stage('Publishing Code QA') {
+            steps {
+                // Run virtual environment
+                sh '. venv/bin/activate'
+                
+                // Run Pylint.
+                sh 'python3 -m pylint -f parseable ${WORKSPACE}/src/ | tee pylint.report'
+
+                // Run Pycodestyle (PEP8 checks).
+                sh 'python3 -m pycodestyle ${WORKSPACE}/src/ | tee pep8.report'
+            }
+            post {
+                always {
+                    recordIssues(
+                        aggregatingResults: true, 
+                        tools: [pyLint(pattern: 'pylint.report'), pep8(pattern: 'pep8.report')],
+                        unstableTotalAll: 200,
+                        failedTotalAll: 300
+                    )
+                }
+            }
+        }
+        
+        stage('Test application') { 
+            steps {
+                // Run virtual environment
+                sh '. venv/bin/activate'
+                
+                // Run pytest
+                    sh 'python3 -m pytest src/ --cov=src --cov-report=xml'
+                
+                // Run coverage.
+                sh 'python3 -m coverage xml'
+            }
+            post {
+                always {
+                    cobertura coberturaReportFile: '**/coverage.xml'
+                }
+            }
+        }
+        
+        stage('Build docker image') {
+            steps {
+                script{
+                    // Build docker image
+                    dockerImage = docker.build imagename
+                }
+            }
+        }
+
+        stage('Push docker image on DockerHub') {
+            steps {
+                script{
+                    // Push generated docker image on DockerHub
+                    docker.withRegistry( '', registryCredential) {
+                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push('latest') 
+                    }
+                }
+            }
+        }
+
+        stage('Remove local images') {
+            steps {
+                // remove docker images
+                sh("docker rmi -f $imagename:latest || :")
+                sh("docker rmi -f $imagename:$BUILD_NUMBER || :")
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                color = "danger"
+                if (currentBuild.currentResult == "SUCCESS") {
+                    color = "good"
+                } else if (currentBuild.currentResult == "UNSTABLE") {
+                    color = "warning"
+                } 
+                ip = sh (script: 'curl -kLs ident.me', returnStdout: true).trim()
+            }
+            
+        echo "[Projet ${env.JOB_NAME}] - Fin du build avec le statut:  ${currentBuild.currentResult} (${currentBuild.durationString})"
+        echo "http://${ip}:8080/job/${env.JOB_NAME}/${currentBuild.number}/analysis/"
+        echo "http://${ip}:8080/job/${env.JOB_NAME}/${currentBuild.number}/cobertura/" 
+           
+        slackSend channel: 'C027BKQ8LSC', color: "${color}", message: "[Projet ${env.JOB_NAME}] - Fin du build ${env.BUILD_DISPLAY_NAME} avec le statut: ${currentBuild.currentResult} (${currentBuild.durationString}) \nRapports: http://${ip}:8080/job/${env.JOB_NAME}/${currentBuild.number}/cobertura/"
+        }
+    }
+}
