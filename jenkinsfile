@@ -33,7 +33,7 @@ pipeline {
                 }
                 
                 echo "[Projet ${env.JOB_NAME}] - Git commit #${env.GIT_COMMIT_NB} \"${env.GIT_COMMIT_MSG}\" @author: ${env.GIT_AUTHOR_MAIL} (${env.GIT_AUTHOR})"
-                slackSend channel: 'C027BKQ8LSC', color: "#439FE0", message: "Dernier commit: https://github.com/apalpant/gradle-jenkins/commit/${env.GIT_COMMIT_NB} \nMessage: \"${env.GIT_COMMIT_MSG}\" par: ${env.GIT_AUTHOR_MAIL} (${env.GIT_AUTHOR})"
+                slackSend channel: 'C027BKQ8LSC', color: "#439FE0", message: "Dernier commit: https://github.com/Groupe2filRouge/AppFilRouge/commit/${env.GIT_COMMIT_NB} \nMessage: \"${env.GIT_COMMIT_MSG}\" par: ${env.GIT_AUTHOR_MAIL} (${env.GIT_AUTHOR})"
             }
         }
        
@@ -80,7 +80,7 @@ pipeline {
                 sh '. venv/bin/activate'
                 
                 // Run pytest
-                    sh 'python3 -m pytest src/ --cov=src --cov-report=xml'
+                sh 'python3 -m pytest src/ --cov=src --cov-report=xml'
                 
                 // Run coverage.
                 sh 'python3 -m coverage xml'
@@ -96,7 +96,8 @@ pipeline {
             steps {
                 script{
                     // Build docker image
-                    dockerImage = docker.build imagename
+                    dockerImage = docker.build imagename 
+                    // "--force-rm --no-cache"
                 }
             }
         }
@@ -137,7 +138,7 @@ pipeline {
         echo "http://${ip}:8080/job/${env.JOB_NAME}/${currentBuild.number}/analysis/"
         echo "http://${ip}:8080/job/${env.JOB_NAME}/${currentBuild.number}/cobertura/" 
            
-        slackSend channel: 'C027BKQ8LSC', color: "${color}", message: "[Projet ${env.JOB_NAME}] - Fin du build ${env.BUILD_DISPLAY_NAME} avec le statut: ${currentBuild.currentResult} (${currentBuild.durationString}) \nRapports: http://${ip}:8080/job/${env.JOB_NAME}/${currentBuild.number}/cobertura/"
+        slackSend channel: 'C027BKQ8LSC', color: "${color}", message: "[Projet ${env.JOB_NAME}] - Fin du build ${env.BUILD_DISPLAY_NAME} avec le statut: ${currentBuild.currentResult} (${currentBuild.durationString}) \nRapports: http://${ip}:8080/job/${env.JOB_NAME}/${currentBuild.number}/cobertura/ \nhttp://${ip}:8080/job/${env.JOB_NAME}/${currentBuild.number}/analysis/"
         }
     }
 }
