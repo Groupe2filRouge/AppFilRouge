@@ -67,8 +67,8 @@ pipeline {
                     recordIssues(
                         aggregatingResults: true, 
                         tools: [pyLint(pattern: 'pylint.report'), pep8(pattern: 'pep8.report')],
-                        unstableTotalAll: 200,
-                        failedTotalAll: 300
+                        unstableTotalAll: 500,
+                        failedTotalAll: 1000
                     )
                 }
             }
