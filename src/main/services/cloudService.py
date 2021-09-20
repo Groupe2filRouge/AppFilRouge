@@ -31,7 +31,7 @@ class CloudService():
             self.s3_client.head_bucket(
                 Bucket=bucket_name,
             )
-            s3_bucket = boto3.resource('s3').Bucket(bucket_name)
+            s3_bucket = boto3.resource('s3').Bucket(bucket_name, region_name='eu-west-3', aws_access_key_id=key, aws_secret_access_key=secret)
             s3_bucket.objects.all().delete()
             self.s3_client.delete_bucket(Bucket=bucket_name)
         except ClientError:
