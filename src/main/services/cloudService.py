@@ -34,9 +34,9 @@ class CloudService():
             )
         s3_bucket = session.resource('s3').Bucket(bucket_name)
         if s3_bucket.creation_date:
-            self.s3_client.create_bucket(Bucket=bucket_name, CreateBucketConfiguration={'LocationConstraint': 'eu-west-3'})
-        else:       
             s3_bucket.objects.all().delete()
+        else:       
+            self.s3_client.create_bucket(Bucket=bucket_name, CreateBucketConfiguration={'LocationConstraint': 'eu-west-3'})
     # except ClientError:
         # The bucket does not exist or you have no access.
         # print("client exception")        
