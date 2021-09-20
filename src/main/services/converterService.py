@@ -14,6 +14,7 @@ class ConverterService():
         print("init ConverterService")
 
     def convert(self, projectName):
+        arborescence={}
         return self.browse("/tmp/clone/"+projectName, projectName)
 
     # Convert local .md file to .html file 
