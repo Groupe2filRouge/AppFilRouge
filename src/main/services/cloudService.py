@@ -33,7 +33,7 @@ class CloudService():
                 aws_secret_access_key=secret,
             )
         s3_bucket = session.resource('s3').Bucket(bucket_name)
-        ifs3_bucket.creation_date is None
+        if s3_bucket.creation_date is None
             self.s3_client.create_bucket(Bucket=bucket_name, CreateBucketConfiguration={'LocationConstraint': 'eu-west-3'})
         else              
             s3_bucket.objects.all().delete()
