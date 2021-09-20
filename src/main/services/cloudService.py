@@ -35,6 +35,7 @@ class CloudService():
             self.s3_client.delete_bucket(Bucket=bucket_name)
         except ClientError:
             # The bucket does not exist or you have no access.
+            print("client exception")
         self.s3_client.create_bucket(Bucket=bucket_name, CreateBucketConfiguration={'LocationConstraint': 'eu-west-3'}) #commentée pour éviter d'avoir à supprimer le bucket à chaque fois.
         website_configuration = {'IndexDocument': {'Suffix': 'README.html'}}
         self.s3_client.put_bucket_website(Bucket=bucket_name, WebsiteConfiguration=website_configuration)
