@@ -27,7 +27,9 @@ class CloudService():
 
         #Création du bucket à la volée:  
         try:
-            self.s3_client.head_bucket(Bucket=bucket_name)
+            self.s3_client.head_bucket(
+                Bucket=bucket_name,
+            )
             s3_bucket = boto3.resource('s3').Bucket(bucket_name)
             s3_bucket.objects.all().delete()
             self.s3_client.delete_bucket(Bucket=bucket_name)
